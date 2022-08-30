@@ -59,3 +59,33 @@ async def read_user_item(
     item = {"item_id": item_id, "needy": needy, "skip": skip, "limit": limit}
     return item
 #쿼리 파람. 몇개는 required 몇개는 required안되게 가능.
+
+#
+# get으로 바디에 넣는것은 굉장히 예외적인 상황에만 해야됨.
+# To send data, you should use one of: POST (the more common), PUT, DELETE or PATCH.
+#
+# Sending a body with a GET request has an undefined behavior in the specifications, nevertheless, it is supported by FastAPI, only for very complex/extreme use cases.
+#
+# As it is discouraged, the interactive docs with Swagger UI won't show the documentation for the body when using GET, and proxies in the middle might not support it.
+
+# 리퀘스트 바디를 선언하는 것은 pydantic으로 함.
+
+
+from typing import Union
+
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+
+class Item(BaseModel):
+    name: str
+    description: Union[str, None] = None
+    price: float
+    tax: Union[float, None] = None
+
+
+#None: 넣으면 optional임
+
+@app.post("/items/")
+async def create_item(item: Item):
+    return item
